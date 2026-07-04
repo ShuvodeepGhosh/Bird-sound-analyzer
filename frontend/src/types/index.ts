@@ -4,6 +4,12 @@ export interface BirdDetection {
   confidence: number;
   start_time: number;
   end_time: number;
+  image_url?: string;
+  description?: string;
+  order?: string;
+  family?: string;
+  gbif_taxon_key?: number;
+  iucn_category?: string;
 }
 
 export interface BirdAnalysisResponse {

@@ -21,6 +21,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
+# Install system dependencies (ffmpeg is required for audio processing)
+RUN apt-get update && apt-get install -y ffmpeg curl && rm -rf /var/lib/apt/lists/*
+
 # Copy wheels and install
 COPY --from=requirements-stage /tmp/wheels /tmp/wheels
 RUN pip install --no-cache-dir /tmp/wheels/* && rm -rf /tmp/wheels

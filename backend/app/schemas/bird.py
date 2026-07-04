@@ -7,6 +7,12 @@ class BirdDetection(BaseModel):
     confidence: float = Field(..., description="Confidence score from BirdNET (0.0 to 1.0)")
     start_time: float = Field(..., description="Start time of the detection in seconds")
     end_time: float = Field(..., description="End time of the detection in seconds")
+    image_url: str | None = Field(None, description="URL to the bird's image from Wikipedia")
+    description: str | None = Field(None, description="Short summary/description of the bird from Wikipedia")
+    order: str | None = Field(None, description="Taxonomic Order from GBIF")
+    family: str | None = Field(None, description="Taxonomic Family from GBIF")
+    gbif_taxon_key: int | None = Field(None, description="GBIF Taxon Key for fetching heatmap tiles")
+    iucn_category: str | None = Field(None, description="IUCN Red List Category")
 
 class BirdAnalysisResponse(BaseModel):
     filename: str = Field(..., description="Original filename of the analyzed audio")

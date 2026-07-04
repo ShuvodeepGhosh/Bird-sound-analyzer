@@ -10,37 +10,37 @@ const ResultSummary: React.FC<ResultSummaryProps> = ({ result }) => {
   const uniqueBirds = new Set(result.detections.map(d => d.common_name)).size;
 
   return (
-    <Paper sx={{ p: 3, borderRadius: 4, bgcolor: 'rgba(27, 67, 50, 0.4)' }}>
-      <Typography variant="h5" fontWeight="bold" gutterBottom>
+    <Paper className="animate-fade-in-up" sx={{ p: 4, borderRadius: 6, bgcolor: 'rgba(27, 67, 50, 0.4)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)' }}>
+      <Typography variant="h5" sx={{ fontWeight: 'bold' }} gutterBottom>
         Analysis Summary
       </Typography>
-      <Typography variant="subtitle1" color="text.secondary" gutterBottom sx={{ mb: 3 }}>
+      <Typography variant="subtitle1" color="text.secondary" gutterBottom sx={{ mb: 4 }}>
         {result.filename}
       </Typography>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={4}>
         <Grid item xs={12} sm={4}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box>
-              <Typography variant="body2" color="text.secondary">Audio Duration</Typography>
-              <Typography variant="h6">{result.duration_seconds.toFixed(1)}s</Typography>
-            </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', p: 2, bgcolor: 'rgba(0,0,0,0.15)', borderRadius: 4 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 1, mb: 1, fontSize: '0.75rem' }}>Audio Duration</Typography>
+            <Typography variant="h4" sx={{ fontWeight: 700, background: 'linear-gradient(90deg, #D8F3DC, #95D5B2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              {result.duration_seconds.toFixed(1)}s
+            </Typography>
           </Box>
         </Grid>
         <Grid item xs={12} sm={4}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box>
-              <Typography variant="body2" color="text.secondary">Processing Time</Typography>
-              <Typography variant="h6">{result.analysis_time_ms}ms</Typography>
-            </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', p: 2, bgcolor: 'rgba(0,0,0,0.15)', borderRadius: 4 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 1, mb: 1, fontSize: '0.75rem' }}>Processing Time</Typography>
+            <Typography variant="h4" sx={{ fontWeight: 700, background: 'linear-gradient(90deg, #D8F3DC, #95D5B2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              {result.analysis_time_ms}ms
+            </Typography>
           </Box>
         </Grid>
         <Grid item xs={12} sm={4}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box>
-              <Typography variant="body2" color="text.secondary">Unique Species</Typography>
-              <Typography variant="h6">{uniqueBirds}</Typography>
-            </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', p: 2, bgcolor: 'rgba(0,0,0,0.15)', borderRadius: 4 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 1, mb: 1, fontSize: '0.75rem' }}>Unique Species</Typography>
+            <Typography variant="h4" sx={{ fontWeight: 700, background: 'linear-gradient(90deg, #D8F3DC, #95D5B2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              {uniqueBirds}
+            </Typography>
           </Box>
         </Grid>
       </Grid>

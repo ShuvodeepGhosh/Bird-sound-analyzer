@@ -9,6 +9,8 @@ import { birdApi } from '../services/birdApi';
 
 const Upload: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
+  const [lat, setLat] = useState<number | undefined>();
+  const [lon, setLon] = useState<number | undefined>();
   const [errorMsg, setErrorMsg] = useState<string>('');
   const navigate = useNavigate();
 
@@ -29,8 +31,14 @@ const Upload: React.FC = () => {
         selectedFile={file}
         onFileSelect={setFile}
         onClear={() => setFile(null)}
+        lat={lat}
+        lon={lon}
+        onLocationUpdate={(newLat, newLon) => {
+          setLat(newLat);
+          setLon(newLon);
+        }}
         onAnalyze={() => {
-          if (file) mutation.mutate(file);
+          if (file) mutation.mutate({ file, lat, lon });
         }}
         disabled={mutation.isPending}
       />

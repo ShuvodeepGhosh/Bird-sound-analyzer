@@ -13,10 +13,10 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = "uploads"
     OUTPUT_DIR: str = "output"
     TEMP_DIR: str = "temp"
-    MAX_UPLOAD_SIZE_MB: int = 10
+    MAX_UPLOAD_SIZE_MB: int = 100
     
     # BirdNET settings
-    MIN_CONFIDENCE: float = 0.5
+    MIN_CONFIDENCE: float = 0.15
     DEFAULT_LATITUDE: float = -1.0 # Or default valid value, BirdNET uses -1 for unknown
     DEFAULT_LONGITUDE: float = -1.0
     BIRDNET_COMMAND: str = "birdnet-analyze"

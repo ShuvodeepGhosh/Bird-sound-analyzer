@@ -7,7 +7,7 @@ const Home: React.FC = () => {
 
   return (
     <Container maxWidth="md" sx={{ py: 12, textAlign: 'center' }}>
-      <Typography variant="h2" component="h1" fontWeight="bold" gutterBottom>
+      <Typography variant="h2" component="h1" sx={{ fontWeight: 'bold' }} gutterBottom>
         BirdSense AI
       </Typography>
       <Typography variant="h5" color="text.secondary" sx={{ mb: 6, maxWidth: 600, mx: 'auto' }}>

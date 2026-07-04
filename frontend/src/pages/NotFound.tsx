@@ -7,7 +7,7 @@ const NotFound: React.FC = () => {
 
   return (
     <Container maxWidth="sm" sx={{ py: 12, textAlign: 'center' }}>
-      <Typography variant="h1" fontWeight="bold" color="secondary.main" gutterBottom>
+      <Typography variant="h1" sx={{ fontWeight: 'bold' }} color="secondary.main" gutterBottom>
         404
       </Typography>
       <Typography variant="h5" gutterBottom>
