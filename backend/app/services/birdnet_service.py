@@ -14,7 +14,7 @@ from app.schemas.bird import BirdDetection, BirdAnalysisResponse
 
 logger = logging.getLogger("birdsense.services.birdnet")
 
-ALLOWED_EXTENSIONS = {".wav", ".mp3", ".flac", ".ogg", ".m4a"}
+ALLOWED_EXTENSIONS = {".wav", ".mp3", ".flac", ".ogg", ".m4a", ".webm"}
 
 class BirdNetService:
     def __init__(self):

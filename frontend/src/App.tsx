@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Upload from './pages/Upload';
+import Record from './pages/Record';
 import Results from './pages/Results';
 import NotFound from './pages/NotFound';
 import { Box } from '@mui/material';
@@ -15,6 +16,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/upload" element={<Upload />} />
+          <Route path="/record" element={<Record />} />
           <Route path="/results" element={<Results />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { Card, CardContent, Typography, Button, Box, useTheme, Chip } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
+import WaveformPlayer from './WaveformPlayer';
 
 interface UploadCardProps {
   onFileSelect: (file: File) => void;
@@ -118,6 +119,8 @@ const UploadCard: React.FC<UploadCardProps> = ({ onFileSelect, selectedFile, onC
           }}>
             <Typography variant="h6" sx={{ mb: 1, wordBreak: 'break-all', fontWeight: 500 }}>{selectedFile.name}</Typography>
             <Chip label={`${(selectedFile.size / (1024 * 1024)).toFixed(2)} MB`} sx={{ bgcolor: 'secondary.dark', color: 'background.default', fontWeight: 600 }} size="small" />
+            
+            <WaveformPlayer file={selectedFile} />
             
             <Box sx={{ mt: 4, mb: 1 }}>
               {lat && lon ? (

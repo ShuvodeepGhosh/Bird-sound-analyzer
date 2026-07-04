@@ -22,7 +22,8 @@
     "react-dom": "^19.2.7",
     "react-dropzone": "^15.0.0",
     "react-leaflet": "^5.0.0",
-    "react-router-dom": "^7.18.0"
+    "react-router-dom": "^7.18.0",
+    "wavesurfer.js": "^7.12.8"
   },
   "devDependencies": {
     "@types/node": "^24.13.2",
