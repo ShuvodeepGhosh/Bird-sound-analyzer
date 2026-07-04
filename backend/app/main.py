@@ -1,5 +1,7 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 import uvicorn
 from contextlib import asynccontextmanager
 
@@ -43,6 +45,11 @@ def create_app() -> FastAPI:
 
     # Routers
     app.include_router(api_router, prefix=settings.API_V1_STR)
+
+    # Mount static files for the React frontend (if the directory exists)
+    static_dir = os.path.join(os.path.dirname(__file__), "static")
+    if os.path.exists(static_dir):
+        app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
 
     return app
 
