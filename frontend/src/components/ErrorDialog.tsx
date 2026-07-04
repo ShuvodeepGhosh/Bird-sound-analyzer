@@ -10,7 +10,7 @@ interface ErrorDialogProps {
 
 const ErrorDialog: React.FC<ErrorDialogProps> = ({ open, title = 'Error', message, onClose }) => {
   return (
-    <Dialog open={open} onClose={onClose} PaperProps={{ sx: { borderRadius: 3, backgroundColor: 'background.paper', minWidth: 350 } }}>
+    <Dialog open={open} onClose={onClose} sx={{ '& .MuiDialog-paper': { borderRadius: 3, backgroundColor: 'background.paper', minWidth: 350 } }}>
       <DialogTitle sx={{ display: 'flex', alignItems: 'center', color: '#ff6b6b' }}>
         <span style={{ marginRight: 8 }}>⚠️</span>
         {title}

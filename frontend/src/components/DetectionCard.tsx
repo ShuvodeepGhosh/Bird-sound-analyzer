@@ -92,7 +92,7 @@ const DetectionCard: React.FC<DetectionCardProps> = ({ detection }) => {
               }}>
                 {detection.common_name}
               </Typography>
-              <Typography variant="subtitle1" color="text.secondary" fontStyle="italic" sx={{ mb: 2, opacity: 0.8 }}>
+              <Typography variant="subtitle1" color="text.secondary" sx={{ fontStyle: 'italic', mb: 2, opacity: 0.8 }}>
                 {detection.scientific_name}
               </Typography>
 
@@ -126,7 +126,7 @@ const DetectionCard: React.FC<DetectionCardProps> = ({ detection }) => {
               <Box sx={{ flex: 1, mr: 4 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                   <Typography variant="body2" color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.75rem' }}>AI Confidence</Typography>
-                  <Typography variant="body2" fontWeight="bold" color="secondary.main">{percentage}%</Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 'bold' }} color="secondary.main">{percentage}%</Typography>
                 </Box>
                 <LinearProgress
                   variant="determinate"

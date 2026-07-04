@@ -19,7 +19,7 @@ const ResultSummary: React.FC<ResultSummaryProps> = ({ result }) => {
       </Typography>
 
       <Grid container spacing={4}>
-        <Grid item xs={12} sm={4}>
+        <Grid size={{ xs: 12, sm: 4 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', p: 2, bgcolor: 'rgba(0,0,0,0.15)', borderRadius: 4 }}>
             <Typography variant="body2" color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 1, mb: 1, fontSize: '0.75rem' }}>Audio Duration</Typography>
             <Typography variant="h4" sx={{ fontWeight: 700, background: 'linear-gradient(90deg, #D8F3DC, #95D5B2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
@@ -27,7 +27,7 @@ const ResultSummary: React.FC<ResultSummaryProps> = ({ result }) => {
             </Typography>
           </Box>
         </Grid>
-        <Grid item xs={12} sm={4}>
+        <Grid size={{ xs: 12, sm: 4 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', p: 2, bgcolor: 'rgba(0,0,0,0.15)', borderRadius: 4 }}>
             <Typography variant="body2" color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 1, mb: 1, fontSize: '0.75rem' }}>Processing Time</Typography>
             <Typography variant="h4" sx={{ fontWeight: 700, background: 'linear-gradient(90deg, #D8F3DC, #95D5B2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
@@ -35,7 +35,7 @@ const ResultSummary: React.FC<ResultSummaryProps> = ({ result }) => {
             </Typography>
           </Box>
         </Grid>
-        <Grid item xs={12} sm={4}>
+        <Grid size={{ xs: 12, sm: 4 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', p: 2, bgcolor: 'rgba(0,0,0,0.15)', borderRadius: 4 }}>
             <Typography variant="body2" color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 1, mb: 1, fontSize: '0.75rem' }}>Unique Species</Typography>
             <Typography variant="h4" sx={{ fontWeight: 700, background: 'linear-gradient(90deg, #D8F3DC, #95D5B2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>

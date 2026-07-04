@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Container, Button, Box } from '@mui/material';
+import { Container, Button } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ResultSummary from '../components/ResultSummary';
 import DetectionList from '../components/DetectionList';

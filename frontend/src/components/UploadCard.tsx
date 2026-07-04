@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Card, CardContent, Typography, Button, Box, useTheme, Chip, Tooltip } from '@mui/material';
+import { Card, CardContent, Typography, Button, Box, useTheme, Chip } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 
 interface UploadCardProps {
@@ -138,7 +138,7 @@ const UploadCard: React.FC<UploadCardProps> = ({ onFileSelect, selectedFile, onC
                 </Button>
               )}
               {locError && (
-                <Typography variant="caption" color="error" display="block" sx={{ mt: 1 }}>
+                <Typography variant="caption" color="error" sx={{ display: 'block', mt: 1 }}>
                   {locError}
                 </Typography>
               )}
