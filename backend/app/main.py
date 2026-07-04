@@ -25,7 +25,7 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title=settings.PROJECT_NAME,
         version=settings.VERSION,
-        description="Backend API for BirdSense AI",
+        description="Backend API for ChirpCheck",
         openapi_url=f"{settings.API_V1_STR}/openapi.json",
         lifespan=lifespan
     )

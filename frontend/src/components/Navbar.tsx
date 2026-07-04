@@ -7,7 +7,7 @@ const Navbar: React.FC = () => {
     <AppBar position="static" color="transparent" elevation={0} sx={{ borderBottom: '1px solid rgba(149, 213, 178, 0.2)' }}>
       <Toolbar>
         <Typography variant="h6" component={RouterLink} to="/" sx={{ flexGrow: 1, textDecoration: 'none', color: 'text.primary', fontWeight: 'bold' }}>
-          BirdSense AI
+          ChirpCheck
         </Typography>
         <Box>
           <Button color="inherit" component={RouterLink} to="/">Home</Button>
