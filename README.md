@@ -19,7 +19,9 @@ This repository contains the Bird Sound Analyzer application. It consists of a F
 
 ### 1. Start the Backend (Docker)
 
-The backend is built with FastAPI and can be easily started using Docker Compose. It will be available at `http://localhost:8000`.
+The backend is built with FastAPI and can be easily started using Docker Compose. By default, it will be available at `http://localhost:7860`.
+
+You can customize the local deployment by creating a `.env` file in the root directory (see `.env` for examples like changing `LOCAL_PORT`).
 
 Open a terminal in the root directory of the project and run:
 
