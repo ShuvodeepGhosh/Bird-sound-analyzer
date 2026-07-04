@@ -1,3 +1,11 @@
+---
+title: Bird Sound Analyzer
+emoji: 🐦
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 7860
+---
 # Bird Sound Analyzer
 
 This repository contains the Bird Sound Analyzer application. It consists of a FastAPI backend and a React (Vite) frontend.
