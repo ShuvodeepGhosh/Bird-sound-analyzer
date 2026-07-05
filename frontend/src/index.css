@@ -25,3 +25,22 @@
     box-shadow: 0 0 0 0 rgba(64, 145, 108, 0);
   }
 }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2); 
+}
+
+::-webkit-scrollbar-thumb {
+  background: #40916C;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #52B788; 
+}

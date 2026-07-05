@@ -10,9 +10,9 @@ import { Box } from '@mui/material';
 
 const App: React.FC = () => {
   return (
-    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', bgcolor: 'background.default' }}>
+    <Box sx={{ height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column', bgcolor: 'background.default' }}>
       <Navbar />
-      <Box component="main" sx={{ flexGrow: 1 }}>
+      <Box component="main" sx={{ flexGrow: 1, overflowY: 'auto' }}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/upload" element={<Upload />} />
