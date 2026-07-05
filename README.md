@@ -12,24 +12,24 @@ This repository contains the Bird Sound Analyzer application. It consists of a F
 
 ## Prerequisites
 
-- [Docker](https://www.docker.com/) and Docker Compose (for running the backend)
+- [Podman](https://podman.io/) and Podman Compose (for running the backend locally)
 - [Node.js](https://nodejs.org/) (version 18+ recommended) and npm (for the frontend)
 
 ## Starting the Application
 
-### 1. Start the Backend (Docker)
+### 1. Start the Backend (Podman)
 
-The backend is built with FastAPI and can be easily started using Docker Compose. By default, it will be available at `http://localhost:7860`.
+The backend is built with FastAPI and can be easily started using Podman Compose. By default, it will be available at `http://localhost:7860`.
 
 You can customize the local deployment by creating a `.env` file in the root directory (see `.env` for examples like changing `LOCAL_PORT`).
 
 Open a terminal in the root directory of the project and run:
 
 ```bash
-docker-compose up -d --build
+podman compose up -d --build
 ```
 
-*(To view the logs, you can use `docker-compose logs -f backend`)*
+*(To view the logs, you can use `podman compose logs -f app`)*
 
 ### 2. Start the Frontend (Vite + React)
 
@@ -56,5 +56,5 @@ To stop the frontend development server, simply press `Ctrl + C` in the frontend
 To stop the backend services, run the following command in the root directory:
 
 ```bash
-docker-compose down
+podman compose down
 ```
