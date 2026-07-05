@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react';
-import { Card, CardContent, Typography, Button, Box, useTheme, Chip } from '@mui/material';
+import { Card, CardContent, Typography, Button, Box, useTheme, Chip, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { useNavigate } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import WaveformPlayer from './WaveformPlayer';
 
@@ -16,6 +18,7 @@ interface UploadCardProps {
 
 const UploadCard: React.FC<UploadCardProps> = ({ onFileSelect, selectedFile, onClear, onAnalyze, disabled, lat, lon, onLocationUpdate }) => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const [locError, setLocError] = useState<string>('');
   
   const handleGetLocation = () => {
@@ -57,15 +60,16 @@ const UploadCard: React.FC<UploadCardProps> = ({ onFileSelect, selectedFile, onC
   });
 
   return (
-    <Card className="animate-fade-in-up" sx={{ maxWidth: 600, width: '100%', mx: 'auto', mt: 4, p: 2 }}>
+    <Card className="animate-fade-in-up" sx={{ maxWidth: 600, width: '100%', mx: 'auto', mt: 4, p: 2, position: 'relative' }}>
+      <IconButton 
+        onClick={() => navigate('/')} 
+        sx={{ position: 'absolute', top: 8, right: 8, color: 'text.secondary' }}
+        aria-label="close"
+      >
+        <CloseIcon />
+      </IconButton>
       <CardContent>
-        <Typography variant="h4" gutterBottom align="center" sx={{ 
-          fontWeight: 'bold', 
-          background: 'linear-gradient(90deg, #D8F3DC, #95D5B2)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          mb: 1
-        }}>
+        <Typography variant="h4" gutterBottom align="center" sx={{ fontWeight: '600', mb: 1, color: 'text.primary' }}>
           Upload Audio Recording
         </Typography>
         <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: 4 }}>
@@ -76,25 +80,21 @@ const UploadCard: React.FC<UploadCardProps> = ({ onFileSelect, selectedFile, onC
           <Box
             {...getRootProps()}
             sx={{
-              border: `2px dashed ${isDragActive ? theme.palette.secondary.main : 'rgba(216, 243, 220, 0.2)'}`,
-              borderRadius: 6,
+              border: `2px dashed ${isDragActive ? theme.palette.primary.main : theme.palette.divider}`,
+              borderRadius: 4,
               p: 6,
               textAlign: 'center',
               cursor: disabled ? 'default' : 'pointer',
-              background: isDragActive 
-                ? 'linear-gradient(180deg, rgba(64, 145, 108, 0.15) 0%, rgba(27, 67, 50, 0.05) 100%)' 
-                : 'rgba(0,0,0,0.2)',
-              animation: isDragActive ? 'pulse-glow 2s infinite' : 'none',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              background: isDragActive ? 'rgba(45, 106, 79, 0.05)' : 'transparent',
+              transition: 'all 0.2s ease',
               '&:hover': {
-                background: disabled ? 'rgba(0,0,0,0.2)' : 'linear-gradient(180deg, rgba(64, 145, 108, 0.08) 0%, rgba(27, 67, 50, 0.05) 100%)',
-                borderColor: 'rgba(216, 243, 220, 0.4)',
-                transform: disabled ? 'none' : 'translateY(-2px)'
+                background: disabled ? 'transparent' : 'rgba(255,255,255,0.02)',
+                borderColor: disabled ? theme.palette.divider : theme.palette.text.secondary,
               }
             }}
           >
             <input {...getInputProps()} />
-            <Box sx={{ mb: 2, color: isDragActive ? 'secondary.main' : 'text.secondary' }}>
+            <Box sx={{ mb: 2, color: isDragActive ? 'primary.main' : 'text.secondary' }}>
               <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                 <polyline points="17 8 12 3 7 8"></polyline>
@@ -111,20 +111,19 @@ const UploadCard: React.FC<UploadCardProps> = ({ onFileSelect, selectedFile, onC
         ) : (
           <Box sx={{ 
             p: 4, 
-            background: 'rgba(0, 0, 0, 0.2)',
-            border: '1px solid rgba(216, 243, 220, 0.15)', 
-            borderRadius: 6, 
+            background: 'transparent',
+            border: `1px solid ${theme.palette.divider}`, 
+            borderRadius: 4, 
             textAlign: 'center',
-            boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.1)'
           }}>
             <Typography variant="h6" sx={{ mb: 1, wordBreak: 'break-all', fontWeight: 500 }}>{selectedFile.name}</Typography>
-            <Chip label={`${(selectedFile.size / (1024 * 1024)).toFixed(2)} MB`} sx={{ bgcolor: 'secondary.dark', color: 'background.default', fontWeight: 600 }} size="small" />
+            <Chip label={`${(selectedFile.size / (1024 * 1024)).toFixed(2)} MB`} sx={{ bgcolor: 'action.selected', color: 'text.primary', fontWeight: 500 }} size="small" />
             
             <WaveformPlayer file={selectedFile} />
             
             <Box sx={{ mt: 4, mb: 1 }}>
               {lat && lon ? (
-                <Typography variant="body2" sx={{ color: 'secondary.main', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                <Typography variant="body2" sx={{ color: 'text.secondary', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                   Location set: {lat.toFixed(4)}, {lon.toFixed(4)}
                 </Typography>
@@ -148,21 +147,15 @@ const UploadCard: React.FC<UploadCardProps> = ({ onFileSelect, selectedFile, onC
             </Box>
 
             <Box sx={{ mt: 4, display: 'flex', gap: 2, justifyContent: 'center' }}>
-              <Button variant="outlined" color="inherit" onClick={onClear} disabled={disabled} sx={{ borderColor: 'rgba(255,255,255,0.2)' }}>
+              <Button variant="outlined" color="inherit" onClick={onClear} disabled={disabled}>
                 Change File
               </Button>
               <Button 
                 variant="contained" 
+                color="primary"
                 onClick={onAnalyze} 
                 disabled={disabled}
-                sx={{
-                  background: 'linear-gradient(135deg, #40916C 0%, #2D6A4F 100%)',
-                  color: '#fff',
-                  px: 4,
-                  '&:hover': {
-                    background: 'linear-gradient(135deg, #52B788 0%, #40916C 100%)',
-                  }
-                }}
+                sx={{ px: 4 }}
               >
                 Analyze Audio
               </Button>

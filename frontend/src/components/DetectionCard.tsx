@@ -18,9 +18,10 @@ const MapResizer = () => {
 
 interface DetectionCardProps {
   detection: BirdDetection;
+  hideTime?: boolean;
 }
 
-const DetectionCard: React.FC<DetectionCardProps> = ({ detection }) => {
+const DetectionCard: React.FC<DetectionCardProps> = ({ detection, hideTime }) => {
   const [mapOpen, setMapOpen] = useState(false);
   const percentage = Math.round(detection.confidence * 100);
 
@@ -110,9 +111,11 @@ const DetectionCard: React.FC<DetectionCardProps> = ({ detection }) => {
                 )}
               </Box>
             </Box>
-            <Typography variant="body2" sx={{ bgcolor: 'rgba(216, 243, 220, 0.15)', color: '#D8F3DC', px: 2, py: 1, borderRadius: 2, fontWeight: 'bold' }}>
-              {detection.start_time.toFixed(1)}s - {detection.end_time.toFixed(1)}s
-            </Typography>
+            {!hideTime && (
+              <Typography variant="body2" sx={{ bgcolor: 'rgba(216, 243, 220, 0.15)', color: '#D8F3DC', px: 2, py: 1, borderRadius: 2, fontWeight: 'bold' }}>
+                {detection.start_time.toFixed(1)}s - {detection.end_time.toFixed(1)}s
+              </Typography>
+            )}
           </Box>
 
           {detection.description && (

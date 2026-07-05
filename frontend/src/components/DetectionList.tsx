@@ -36,7 +36,7 @@ const DetectionList: React.FC<DetectionListProps> = ({ detections }) => {
         {uniqueBirds.length === 1 ? '1 Bird Species Detected' : `${uniqueBirds.length} Unique Bird Species Detected`}
       </Typography>
       {uniqueBirds.map((det, idx) => (
-        <DetectionCard key={idx} detection={det} />
+        <DetectionCard key={idx} detection={det} hideTime={uniqueBirds.length === 1} />
       ))}
     </Box>
   );
