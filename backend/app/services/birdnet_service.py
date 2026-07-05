@@ -74,7 +74,8 @@ class BirdNetService:
                 # Only pass lat/lon if they are not the default -1.0 (which means unknown)
                 # birdnetlib filters birds based on location, so passing -1.0, -1.0 will filter out almost everything
                 kwargs = {
-                    "min_conf": settings.MIN_CONFIDENCE
+                    "min_conf": settings.MIN_CONFIDENCE,
+                    "sensitivity": settings.SENSITIVITY
                 }
                 if use_lat != -1.0 and use_lon != -1.0:
                     kwargs["lat"] = use_lat
@@ -87,7 +88,10 @@ class BirdNetService:
                     **kwargs
                 )
                 recording.analyze()
-                return recording.detections, recording.duration
+                
+                # Manually filter detections since birdnetlib min_conf can sometimes be ignored
+                filtered_detections = [d for d in recording.detections if d['confidence'] >= settings.MIN_CONFIDENCE]
+                return filtered_detections, recording.duration
             
             # Run the blocking analysis in a thread
             raw_detections, audio_duration = await asyncio.to_thread(run_inference)

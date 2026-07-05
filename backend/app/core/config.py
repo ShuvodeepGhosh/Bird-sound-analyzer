@@ -16,7 +16,8 @@ class Settings(BaseSettings):
     MAX_UPLOAD_SIZE_MB: int = 100
     
     # BirdNET settings
-    MIN_CONFIDENCE: float = 0.15
+    MIN_CONFIDENCE: float = 0.5
+    SENSITIVITY: float = 1.25
     DEFAULT_LATITUDE: float = -1.0 # Or default valid value, BirdNET uses -1 for unknown
     DEFAULT_LONGITUDE: float = -1.0
     BIRDNET_COMMAND: str = "birdnet-analyze"
