@@ -17,7 +17,11 @@ const Record: React.FC = () => {
   const mutation = useMutation({
     mutationFn: birdApi.analyzeAudio,
     onSuccess: (data) => {
-      navigate('/results', { state: { result: data } });
+      let audioUrl = '';
+      if (file) {
+        audioUrl = URL.createObjectURL(file);
+      }
+      navigate('/results', { state: { result: data, audioUrl } });
     },
     onError: (error: any) => {
       const msg = error.response?.data?.message || error.message || 'An unexpected error occurred during analysis.';

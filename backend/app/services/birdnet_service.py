@@ -89,8 +89,21 @@ class BirdNetService:
                 )
                 recording.analyze()
                 
-                # Manually filter detections since birdnetlib min_conf can sometimes be ignored
-                filtered_detections = [d for d in recording.detections if d['confidence'] >= settings.MIN_CONFIDENCE]
+                # Known non-bird noise classes in BirdNET
+                NOISE_CLASSES = {
+                    "Human vocal", "Human non-vocal", "Human whistling", "Human footsteps", 
+                    "Engine", "Siren", "Noise", "Silence", "Wind", "Rain", "Water", 
+                    "Dog", "Domestic dog", "Cat", "Domestic cat", "Vehicle", "Motor", 
+                    "Fireworks", "Gunshot", "Thunder", "Environmental", "Background"
+                }
+                
+                filtered_detections = []
+                for d in recording.detections:
+                    if d['confidence'] >= settings.MIN_CONFIDENCE:
+                        # Filter out noise classes
+                        if d['common_name'] not in NOISE_CLASSES and d['scientific_name'] not in NOISE_CLASSES:
+                            filtered_detections.append(d)
+                            
                 return filtered_detections, recording.duration
             
             # Run the blocking analysis in a thread

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography, Grid, Paper } from '@mui/material';
 import type { BirdAnalysisResponse } from '../types';
+import { formatOccurrenceTime, formatProcessingTime } from '../utils/timeFormatter';
 
 interface ResultSummaryProps {
   result: BirdAnalysisResponse;
@@ -23,7 +24,7 @@ const ResultSummary: React.FC<ResultSummaryProps> = ({ result }) => {
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', p: 2, bgcolor: 'rgba(0,0,0,0.15)', borderRadius: 4 }}>
             <Typography variant="body2" color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 1, mb: 1, fontSize: '0.75rem' }}>Audio Duration</Typography>
             <Typography variant="h4" sx={{ fontWeight: 700, background: 'linear-gradient(90deg, #D8F3DC, #95D5B2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              {result.duration_seconds.toFixed(1)}s
+              {formatOccurrenceTime(result.duration_seconds)}
             </Typography>
           </Box>
         </Grid>
@@ -31,7 +32,7 @@ const ResultSummary: React.FC<ResultSummaryProps> = ({ result }) => {
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', p: 2, bgcolor: 'rgba(0,0,0,0.15)', borderRadius: 4 }}>
             <Typography variant="body2" color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 1, mb: 1, fontSize: '0.75rem' }}>Processing Time</Typography>
             <Typography variant="h4" sx={{ fontWeight: 700, background: 'linear-gradient(90deg, #D8F3DC, #95D5B2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              {result.analysis_time_ms}ms
+              {formatProcessingTime(result.analysis_time_ms)}
             </Typography>
           </Box>
         </Grid>
