@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Card, CardContent, Typography, Button, Box, useTheme, Chip, IconButton } from '@mui/material';
+import { Card, CardContent, Typography, Button, Box, useTheme, Chip, IconButton, Switch, FormControlLabel } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
@@ -14,9 +14,11 @@ interface UploadCardProps {
   lat?: number;
   lon?: number;
   onLocationUpdate?: (lat: number, lon: number) => void;
+  denoise: boolean;
+  onDenoiseChange: (val: boolean) => void;
 }
 
-const UploadCard: React.FC<UploadCardProps> = ({ onFileSelect, selectedFile, onClear, onAnalyze, disabled, lat, lon, onLocationUpdate }) => {
+const UploadCard: React.FC<UploadCardProps> = ({ onFileSelect, selectedFile, onClear, onAnalyze, disabled, lat, lon, onLocationUpdate, denoise, onDenoiseChange }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [locError, setLocError] = useState<string>('');
@@ -72,9 +74,26 @@ const UploadCard: React.FC<UploadCardProps> = ({ onFileSelect, selectedFile, onC
         <Typography variant="h4" gutterBottom align="center" sx={{ fontWeight: '600', mb: 1, color: 'text.primary' }}>
           Upload Audio Recording
         </Typography>
-        <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: 4 }}>
+        <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: 2 }}>
           Supported formats: .wav, .mp3, .flac, .ogg, .m4a (Max 100MB)
         </Typography>
+
+        <Box sx={{ mb: 4, display: 'flex', justifyContent: 'center', p: 1.5, borderRadius: 3, background: 'rgba(216, 243, 220, 0.1)', border: '1px solid rgba(216, 243, 220, 0.2)' }}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={denoise}
+                onChange={(e) => onDenoiseChange(e.target.checked)}
+                color="secondary"
+              />
+            }
+            label={
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                Enable AI Noise Reduction (Recommended for wind/traffic)
+              </Typography>
+            }
+          />
+        </Box>
 
         {!selectedFile ? (
           <Box

@@ -20,20 +20,15 @@ const Home: React.FC = () => {
         justifyContent: 'center',
         mt: 4 
       }}>
-        <Tooltip title="Coming soon">
-          <span>
-            <Button 
-              variant="contained" 
-              color="secondary" 
-              size="large" 
-              disabled
-              onClick={() => navigate('/record')}
-              sx={{ px: 4, py: 1.5, fontSize: '1.1rem', width: { xs: '100%', sm: 'auto' } }}
-            >
-              Record Live
-            </Button>
-          </span>
-        </Tooltip>
+        <Button 
+          variant="contained" 
+          color="secondary" 
+          size="large" 
+          onClick={() => navigate('/record')}
+          sx={{ px: 4, py: 1.5, fontSize: '1.1rem', width: { xs: '100%', sm: 'auto' } }}
+        >
+          Record Live
+        </Button>
         <Button 
           variant="contained" 
           color="primary" 

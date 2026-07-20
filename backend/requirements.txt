@@ -6,3 +6,4 @@ sqlalchemy==2.0.30
 birdnet-analyzer
 birdnetlib
 httpx
+noisereduce

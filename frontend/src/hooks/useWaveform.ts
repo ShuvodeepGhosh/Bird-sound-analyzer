@@ -125,7 +125,11 @@ export const useWaveform = ({
     });
 
     return () => {
-      ws.destroy();
+      try {
+        if (ws) ws.destroy();
+      } catch (e) {
+        console.warn("WaveSurfer cleanup error:", e);
+      }
     };
   }, [audioUrl, theme]);
 

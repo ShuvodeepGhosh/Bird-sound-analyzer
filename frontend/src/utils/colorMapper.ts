@@ -27,18 +27,13 @@ export const getSpeciesColor = (speciesName: string): string => {
     return colorMap.get(speciesName)!;
   }
 
-  // Hash string to pick a color so it's consistent even across refreshes for the same set
   let hash = 0;
   for (let i = 0; i < speciesName.length; i++) {
     hash = speciesName.charCodeAt(i) + ((hash << 5) - hash);
   }
   
-  // To avoid too many collisions, we could also just pick sequential,
-  // but hash is better for consistency if the same bird appears in multiple files.
-  // Actually, sequential is better for ensuring distinct colors within the same file.
-  // Let's use sequential for uniqueness in the current session.
-  
-  const nextColorIndex = colorMap.size % COLORS.length;
+  // Math.abs to handle negative hashes from bitwise operations
+  const nextColorIndex = Math.abs(hash) % COLORS.length;
   const nextColor = COLORS[nextColorIndex];
   
   colorMap.set(speciesName, nextColor);

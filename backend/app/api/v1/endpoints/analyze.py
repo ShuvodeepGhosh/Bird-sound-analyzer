@@ -13,9 +13,10 @@ async def analyze_audio(
     file: UploadFile = File(...),
     lat: Optional[float] = Form(None),
     lon: Optional[float] = Form(None),
+    denoise: Optional[bool] = Form(False),
     service: BirdNetService = Depends(get_birdnet_service)
 ):
     """
     Analyze an uploaded audio file using BirdNET.
     """
-    return await service.analyze(file, lat, lon)
+    return await service.analyze(file, lat, lon, denoise)

@@ -45,12 +45,12 @@ class BirdNetService:
             logger.error(f"Failed to save upload file: {str(e)}")
             raise InvalidAudioError("Could not save the uploaded file")
 
-    async def analyze(self, file: UploadFile, lat: float | None = None, lon: float | None = None) -> BirdAnalysisResponse:
+    async def analyze(self, file: UploadFile, lat: float | None = None, lon: float | None = None, denoise: bool = False) -> BirdAnalysisResponse:
         from datetime import datetime
         from birdnetlib import Recording
         from app.core.analyzer import get_analyzer
 
-        logger.info(f"Upload started: {file.filename}")
+        logger.info(f"Upload started: {file.filename}, denoise: {denoise}")
         self.validate_file(file.filename, file.size)
         
         file_id = str(uuid.uuid4())
@@ -61,6 +61,26 @@ class BirdNetService:
         await self.save_upload_file(file, temp_audio_path)
         logger.info(f"Upload completed: {temp_audio_path.name}")
         
+        if denoise:
+            logger.info("Running AI audio denoising...")
+            try:
+                import librosa
+                import soundfile as sf
+                import noisereduce as nr
+                
+                # Load audio
+                y, sr = librosa.load(str(temp_audio_path), sr=None)
+                # Denoise
+                reduced_noise = nr.reduce_noise(y=y, sr=sr, stationary=True)
+                # Write back (ensure we write as wav for best compatibility)
+                if ext.lower() != '.wav':
+                    ext = '.wav'
+                    temp_audio_path = self.upload_dir / f"{file_id}{ext}"
+                sf.write(str(temp_audio_path), reduced_noise, sr)
+                logger.info("Denoising complete")
+            except Exception as e:
+                logger.error(f"Denoising failed, falling back to original: {e}")
+
         start_time = time.time()
         
         try:

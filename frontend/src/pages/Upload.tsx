@@ -11,6 +11,7 @@ const Upload: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [lat, setLat] = useState<number | undefined>();
   const [lon, setLon] = useState<number | undefined>();
+  const [denoise, setDenoise] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>('');
   const navigate = useNavigate();
 
@@ -41,8 +42,10 @@ const Upload: React.FC = () => {
           setLat(newLat);
           setLon(newLon);
         }}
+        denoise={denoise}
+        onDenoiseChange={setDenoise}
         onAnalyze={() => {
-          if (file) mutation.mutate({ file, lat, lon });
+          if (file) mutation.mutate({ file, lat, lon, denoise });
         }}
         disabled={mutation.isPending}
       />

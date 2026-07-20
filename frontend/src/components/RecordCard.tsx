@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Card, CardContent, Typography, Button, Box, useTheme, Chip, IconButton } from '@mui/material';
+import { Card, CardContent, Typography, Button, Box, useTheme, Chip, IconButton, Switch, FormControlLabel } from '@mui/material';
 import MicIcon from '@mui/icons-material/Mic';
 import StopIcon from '@mui/icons-material/Stop';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -7,22 +7,28 @@ import WaveformPlayer from './WaveformPlayer';
 
 interface RecordCardProps {
   onRecordingComplete: (file: File | null) => void;
+  onChunkReady?: (file: File, chunkStartTime: number) => void;
   selectedFile: File | null;
   onAnalyze: () => void;
   disabled: boolean;
   lat?: number;
   lon?: number;
   onLocationUpdate?: (lat: number, lon: number) => void;
+  denoise: boolean;
+  onDenoiseChange: (val: boolean) => void;
 }
 
 const RecordCard: React.FC<RecordCardProps> = ({ 
   onRecordingComplete, 
+  onChunkReady,
   selectedFile, 
   onAnalyze, 
   disabled, 
   lat, 
   lon, 
-  onLocationUpdate 
+  onLocationUpdate,
+  denoise,
+  onDenoiseChange
 }) => {
   const theme = useTheme();
   const [isRecording, setIsRecording] = useState(false);
@@ -30,14 +36,23 @@ const RecordCard: React.FC<RecordCardProps> = ({
   const [locError, setLocError] = useState<string>('');
   
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<number | null>(null);
+  const chunkTimerRef = useRef<number | null>(null);
+  const isRecordingRef = useRef<boolean>(false);
+  const currentChunkStartRef = useRef<number>(0);
 
   useEffect(() => {
     return () => {
+      isRecordingRef.current = false;
       if (timerRef.current) clearInterval(timerRef.current);
+      if (chunkTimerRef.current) clearTimeout(chunkTimerRef.current);
       if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
         mediaRecorderRef.current.stop();
+      }
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
       }
     };
   }, []);
@@ -60,20 +75,19 @@ const RecordCard: React.FC<RecordCardProps> = ({
     }
   };
 
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      audioChunksRef.current = [];
+  const startNewChunk = (stream: MediaStream) => {
+    const mediaRecorder = new MediaRecorder(stream);
+    mediaRecorderRef.current = mediaRecorder;
+    audioChunksRef.current = [];
 
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunksRef.current.push(event.data);
-        }
-      };
+    mediaRecorder.ondataavailable = (event) => {
+      if (event.data.size > 0) {
+        audioChunksRef.current.push(event.data);
+      }
+    };
 
-      mediaRecorder.onstop = () => {
+    mediaRecorder.onstop = () => {
+      if (audioChunksRef.current.length > 0) {
         const mimeType = mediaRecorder.mimeType || 'audio/webm';
         let ext = 'webm';
         if (mimeType.includes('mp4')) ext = 'm4a';
@@ -81,15 +95,40 @@ const RecordCard: React.FC<RecordCardProps> = ({
 
         const audioBlob = new Blob(audioChunksRef.current, { type: mimeType });
         const file = new File([audioBlob], `recording-${new Date().getTime()}.${ext}`, { type: mimeType });
-        onRecordingComplete(file);
         
-        // Stop all tracks to release microphone
-        stream.getTracks().forEach(track => track.stop());
-      };
+        if (isRecordingRef.current) {
+          if (onChunkReady) onChunkReady(file, currentChunkStartRef.current);
+          currentChunkStartRef.current += 5; // Assuming 5-second chunks
+          // Immediately start next chunk
+          startNewChunk(stream);
+        } else {
+          onRecordingComplete(file);
+          // Stop all tracks to release microphone
+          stream.getTracks().forEach(track => track.stop());
+        }
+      }
+    };
 
-      mediaRecorder.start();
+    mediaRecorder.start();
+    
+    // Stop this chunk after 5 seconds to emit it
+    chunkTimerRef.current = window.setTimeout(() => {
+      if (mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+      }
+    }, 5000);
+  };
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
+      isRecordingRef.current = true;
+      currentChunkStartRef.current = 0;
       setIsRecording(true);
       setRecordingTime(0);
+
+      startNewChunk(stream);
       
       timerRef.current = window.setInterval(() => {
         setRecordingTime((prev) => prev + 1);
@@ -102,10 +141,13 @@ const RecordCard: React.FC<RecordCardProps> = ({
   };
 
   const stopRecording = () => {
+    isRecordingRef.current = false;
+    setIsRecording(false);
+    if (timerRef.current) clearInterval(timerRef.current);
+    if (chunkTimerRef.current) clearTimeout(chunkTimerRef.current);
+    
     if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
       mediaRecorderRef.current.stop();
-      setIsRecording(false);
-      if (timerRef.current) clearInterval(timerRef.current);
     }
   };
 
@@ -127,9 +169,26 @@ const RecordCard: React.FC<RecordCardProps> = ({
         }}>
           Live Bird Audio Recording
         </Typography>
-        <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: 4 }}>
+        <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: 2 }}>
           Record the birds around you for instant AI analysis
         </Typography>
+
+        <Box sx={{ mb: 4, display: 'flex', justifyContent: 'center', p: 1.5, borderRadius: 3, background: 'rgba(216, 243, 220, 0.1)', border: '1px solid rgba(216, 243, 220, 0.2)' }}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={denoise}
+                onChange={(e) => onDenoiseChange(e.target.checked)}
+                color="secondary"
+              />
+            }
+            label={
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                Enable AI Noise Reduction (Recommended for wind/traffic)
+              </Typography>
+            }
+          />
+        </Box>
 
         {!selectedFile ? (
           <Box
