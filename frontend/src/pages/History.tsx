@@ -65,7 +65,7 @@ const History: React.FC = () => {
             };
 
             return (
-              <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={entry.scientific_name}>
+              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={entry.scientific_name}>
                 <Box sx={{ height: '100%' }}>
                   <DetectionCard
                     detectionGroup={[{ det: detectionAsCard, originalIndex: 0 }]}

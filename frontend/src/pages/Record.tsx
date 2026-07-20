@@ -18,7 +18,7 @@ const Record: React.FC = () => {
   const [activeDetectionIndex, setActiveDetectionIndex] = useState<number | null>(null);
   const [lat, setLat] = useState<number | null>(null);
   const [lon, setLon] = useState<number | null>(null);
-  const [locationFilter, setLocationFilter] = useState<boolean>(false);
+  const [locationFilter] = useState<boolean>(false);
 
   const { addDetections } = useBirdHistory();
 
