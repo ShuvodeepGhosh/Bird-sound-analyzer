@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ResultSummary from '../components/ResultSummary';
 import DetectionList from '../components/DetectionList';
 import Waveform from '../components/WaveformPlayer/Waveform';
+import { useBirdHistory } from '../hooks/useBirdHistory';
 import type { BirdAnalysisResponse } from '../types';
 
 const Results: React.FC = () => {
@@ -11,6 +12,8 @@ const Results: React.FC = () => {
   const navigate = useNavigate();
   const result = location.state?.result as BirdAnalysisResponse;
   const audioUrl = location.state?.audioUrl as string | undefined;
+  
+  const { addDetections } = useBirdHistory();
 
   const [activeDetectionIndex, setActiveDetectionIndex] = useState<number | null>(null);
   const [playTrigger, setPlayTrigger] = useState<number>(0);
@@ -25,25 +28,27 @@ const Results: React.FC = () => {
   useEffect(() => {
     if (!result) {
       navigate('/upload');
+    } else if (result.detections && result.detections.length > 0) {
+      addDetections(result.detections);
     }
-  }, [result, navigate]);
+  }, [result, navigate, addDetections]);
 
   if (!result) return null;
 
   return (
     <Container maxWidth={false} sx={{ py: 6, px: { xs: 2, sm: 4, md: 8 } }}>
-      <Button 
+      <Button
         onClick={() => navigate('/upload')}
         sx={{ mb: 4, color: 'text.secondary' }}
       >
         &larr; Analyze Another File
       </Button>
-      
+
       <ResultSummary result={result} />
 
       {audioUrl ? (
-        <Waveform 
-          audioUrl={audioUrl} 
+        <Waveform
+          audioUrl={audioUrl}
           detections={result.detections}
           activeDetectionIndex={activeDetectionIndex}
           onDetectionSelect={handleDetectionSelect}
@@ -55,8 +60,8 @@ const Results: React.FC = () => {
         </Box>
       )}
 
-      <DetectionList 
-        detections={result.detections} 
+      <DetectionList
+        detections={result.detections}
         activeDetectionIndex={activeDetectionIndex}
         onDetectionSelect={handleDetectionSelect}
       />

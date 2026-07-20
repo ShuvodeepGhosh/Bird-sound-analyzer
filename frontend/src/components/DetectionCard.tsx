@@ -24,9 +24,11 @@ interface DetectionCardProps {
   activeDetectionIndex?: number | null;
   color?: string;
   onTimestampClick?: (originalIndex: number) => void;
+  hideOccurrences?: boolean;
+  compact?: boolean;
 }
 
-const DetectionCard: React.FC<DetectionCardProps> = ({ detectionGroup, isActive, activeDetectionIndex, color = '#2dd4bf', onTimestampClick }) => {
+const DetectionCard: React.FC<DetectionCardProps> = ({ detectionGroup, isActive, activeDetectionIndex, color = '#2dd4bf', onTimestampClick, hideOccurrences, compact }) => {
   const primaryDetection = detectionGroup[0].det;
   const highestConfidence = Math.round(Math.max(...detectionGroup.map(g => g.det.confidence)) * 100);
   const [mapOpen, setMapOpen] = useState(false);
@@ -76,7 +78,7 @@ const DetectionCard: React.FC<DetectionCardProps> = ({ detectionGroup, isActive,
             onClick={() => setImageModalOpen(true)}
             sx={{
               width: '100%',
-              height: 200,
+              height: compact ? 120 : 200,
               backgroundImage: `url(${primaryDetection.image_url})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
@@ -97,10 +99,10 @@ const DetectionCard: React.FC<DetectionCardProps> = ({ detectionGroup, isActive,
         )}
 
         {/* Right Side: Content */}
-        <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', p: 3, zIndex: 1 }}>
+        <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', p: compact ? 2 : 3, zIndex: 1 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
             <Box>
-              <Typography variant="h4" sx={{
+              <Typography variant={compact ? "h5" : "h4"} sx={{
                 fontWeight: 'bold',
                 background: 'linear-gradient(90deg, #FFFFFF, #D8F3DC)',
                 WebkitBackgroundClip: 'text',
@@ -109,7 +111,7 @@ const DetectionCard: React.FC<DetectionCardProps> = ({ detectionGroup, isActive,
               }}>
                 {primaryDetection.common_name}
               </Typography>
-              <Typography variant="subtitle1" color="text.secondary" sx={{ fontStyle: 'italic', mb: 2, opacity: 0.8 }}>
+              <Typography variant="subtitle2" color="text.secondary" sx={{ fontStyle: 'italic', mb: 1.5, opacity: 0.8 }}>
                 {primaryDetection.scientific_name}
               </Typography>
 
@@ -129,43 +131,45 @@ const DetectionCard: React.FC<DetectionCardProps> = ({ detectionGroup, isActive,
             </Box>
           </Box>
 
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>Occurrences</Typography>
-            <Box 
-              sx={{ 
-                display: 'flex', 
-                gap: 1, 
-                flexWrap: 'wrap',
-                maxHeight: 120, // Fixed size
-                overflowY: 'auto', // Scrollbar
-                pr: 1,
-                // Custom scrollbar styling for better aesthetics
-                '&::-webkit-scrollbar': { width: '6px' },
-                '&::-webkit-scrollbar-track': { background: 'rgba(255, 255, 255, 0.05)', borderRadius: '4px' },
-                '&::-webkit-scrollbar-thumb': { background: 'rgba(255, 255, 255, 0.2)', borderRadius: '4px' },
-                '&::-webkit-scrollbar-thumb:hover': { background: 'rgba(255, 255, 255, 0.3)' }
-              }}
-            >
-              {detectionGroup.map((g) => {
-                const isPillActive = g.originalIndex === activeDetectionIndex;
-                return (
-                  <Chip 
-                    key={g.originalIndex}
-                    label={`${formatOccurrenceTime(g.det.start_time)} - ${formatOccurrenceTime(g.det.end_time)}`}
-                    onClick={() => onTimestampClick?.(g.originalIndex)}
-                    sx={{ 
-                      bgcolor: isPillActive ? 'primary.main' : 'rgba(216, 243, 220, 0.15)', 
-                      color: isPillActive ? 'primary.contrastText' : '#D8F3DC', 
-                      fontWeight: 'bold',
-                      '&:hover': { bgcolor: isPillActive ? 'primary.dark' : 'rgba(216, 243, 220, 0.25)' },
-                    }}
-                  />
-                );
-              })}
+          {!hideOccurrences && (
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>Occurrences</Typography>
+              <Box 
+                sx={{ 
+                  display: 'flex', 
+                  gap: 1, 
+                  flexWrap: 'wrap',
+                  maxHeight: 120, // Fixed size
+                  overflowY: 'auto', // Scrollbar
+                  pr: 1,
+                  // Custom scrollbar styling for better aesthetics
+                  '&::-webkit-scrollbar': { width: '6px' },
+                  '&::-webkit-scrollbar-track': { background: 'rgba(255, 255, 255, 0.05)', borderRadius: '4px' },
+                  '&::-webkit-scrollbar-thumb': { background: 'rgba(255, 255, 255, 0.2)', borderRadius: '4px' },
+                  '&::-webkit-scrollbar-thumb:hover': { background: 'rgba(255, 255, 255, 0.3)' }
+                }}
+              >
+                {detectionGroup.map((g) => {
+                  const isPillActive = g.originalIndex === activeDetectionIndex;
+                  return (
+                    <Chip 
+                      key={g.originalIndex}
+                      label={`${formatOccurrenceTime(g.det.start_time)} - ${formatOccurrenceTime(g.det.end_time)}`}
+                      onClick={() => onTimestampClick?.(g.originalIndex)}
+                      sx={{ 
+                        bgcolor: isPillActive ? 'primary.main' : 'rgba(216, 243, 220, 0.15)', 
+                        color: isPillActive ? 'primary.contrastText' : '#D8F3DC', 
+                        fontWeight: 'bold',
+                        '&:hover': { bgcolor: isPillActive ? 'primary.dark' : 'rgba(216, 243, 220, 0.25)' },
+                      }}
+                    />
+                  );
+                })}
+              </Box>
             </Box>
-          </Box>
+          )}
 
-          {primaryDetection.description && (
+          {!compact && primaryDetection.description && (
             <Typography variant="body2" color="text.secondary" sx={{ mb: 3, flex: 1, lineHeight: 1.6, opacity: 0.9 }}>
               {primaryDetection.description}
             </Typography>

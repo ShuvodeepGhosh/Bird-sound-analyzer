@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Container, Box, Typography, Button, IconButton, Chip } from '@mui/material';
 import MicIcon from '@mui/icons-material/Mic';
 import StopIcon from '@mui/icons-material/Stop';
@@ -8,6 +8,7 @@ import DetectionList from '../components/DetectionList';
 import ErrorDialog from '../components/ErrorDialog';
 import { birdApi } from '../services/birdApi';
 import { useLiveRecording } from '../hooks/useLiveRecording';
+import { useBirdHistory } from '../hooks/useBirdHistory';
 import type { BirdDetection } from '../types';
 
 const Record: React.FC = () => {
@@ -15,10 +16,34 @@ const Record: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [liveDetections, setLiveDetections] = useState<BirdDetection[]>([]);
   const [activeDetectionIndex, setActiveDetectionIndex] = useState<number | null>(null);
+  const [lat, setLat] = useState<number | null>(null);
+  const [lon, setLon] = useState<number | null>(null);
+  const [locationFilter, setLocationFilter] = useState<boolean>(false);
+
+  const { addDetections } = useBirdHistory();
+
+  useEffect(() => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLat(position.coords.latitude);
+          setLon(position.coords.longitude);
+        },
+        (error) => {
+          console.warn("Geolocation error:", error.message);
+        }
+      );
+    }
+  }, []);
 
   const handleChunkReady = async (chunkFile: File, offset: number) => {
     try {
-      const data = await birdApi.analyzeAudio({ file: chunkFile, denoise });
+      const data = await birdApi.analyzeAudio({ 
+        file: chunkFile, 
+        denoise,
+        ...(locationFilter && lat && { lat }),
+        ...(locationFilter && lon && { lon })
+      });
 
       const adjustedDetections = data.detections.map(d => ({
         ...d,
@@ -28,6 +53,7 @@ const Record: React.FC = () => {
 
       if (adjustedDetections.length > 0) {
         setLiveDetections(prev => [...prev, ...adjustedDetections]);
+        addDetections(adjustedDetections);
       }
     } catch (error) {
       console.error("Live chunk analysis failed:", error);

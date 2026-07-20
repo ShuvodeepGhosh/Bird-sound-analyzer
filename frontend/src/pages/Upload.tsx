@@ -49,9 +49,9 @@ const Upload: React.FC = () => {
         }}
         disabled={mutation.isPending}
       />
-      
+
       <LoadingOverlay open={mutation.isPending} />
-      
+
       <ErrorDialog
         open={!!errorMsg}
         message={errorMsg}

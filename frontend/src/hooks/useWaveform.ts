@@ -125,10 +125,12 @@ export const useWaveform = ({
     });
 
     return () => {
-      try {
-        if (ws) ws.destroy();
-      } catch (e) {
-        console.warn("WaveSurfer cleanup error:", e);
+      if (ws) {
+        try {
+          ws.destroy();
+        } catch (e) {
+          // Ignore AbortError when unmounting during fetch
+        }
       }
     };
   }, [audioUrl, theme]);

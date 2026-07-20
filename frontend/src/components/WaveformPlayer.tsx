@@ -52,7 +52,13 @@ const WaveformPlayer: React.FC<WaveformPlayerProps> = ({ file }) => {
     wavesurfer.on('finish', () => setIsPlaying(false));
 
     return () => {
-      wavesurfer.destroy();
+      if (wavesurfer) {
+        try {
+          wavesurfer.destroy();
+        } catch (e) {
+          // Ignore AbortError when unmounting during fetch
+        }
+      }
       URL.revokeObjectURL(url);
     };
   }, [file, theme]);
