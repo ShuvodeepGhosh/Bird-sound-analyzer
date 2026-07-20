@@ -42,6 +42,21 @@ def create_app() -> FastAPI:
     # Exception Handlers
     app.add_exception_handler(AppException, app_exception_handler)
     app.add_exception_handler(Exception, global_exception_handler)
+    
+    # Custom 404 handler for React SPA routing
+    @app.exception_handler(404)
+    async def custom_404_handler(request, exc):
+        from fastapi.responses import JSONResponse, FileResponse
+        # If it's an API route that's not found, return JSON 404
+        if request.url.path.startswith(settings.API_V1_STR):
+            return JSONResponse({"detail": "Not Found"}, status_code=404)
+        
+        # Otherwise, fallback to React's index.html for client-side routing
+        index_path = os.path.join(os.path.dirname(__file__), "static", "index.html")
+        if os.path.exists(index_path):
+            return FileResponse(index_path)
+            
+        return JSONResponse({"detail": "Not Found"}, status_code=404)
 
     # Routers
     app.include_router(api_router, prefix=settings.API_V1_STR)
