@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import { getSpeciesColor } from '../utils/colorMapper';
 import type { BirdDetection } from '../types';
 
@@ -24,18 +24,18 @@ const LiveWaveform: React.FC<LiveWaveformProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const theme = useTheme();
-  
+
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const dataArrayRef = useRef<Uint8Array | null>(null);
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const requestRef = useRef<number | null>(null);
-  
+
   // History buffer for the waveform (values 0-255)
   // We want to store roughly enough points to fill the canvas width.
   // E.g. 1000 points for 30 seconds = 33 points per second.
   const POINTS_PER_SECOND = 40;
-  const historyRef = useRef<{t: number, a: number}[]>([]);
+  const historyRef = useRef<{ t: number, a: number }[]>([]);
 
   // Refs for props to avoid stale closures in requestAnimationFrame
   const recordingTimeRef = useRef(recordingTime);
@@ -50,7 +50,7 @@ const LiveWaveform: React.FC<LiveWaveformProps> = ({
     if (!isRecording || !stream) {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
       if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
-        audioContextRef.current.close().catch(() => {});
+        audioContextRef.current.close().catch(() => { });
         audioContextRef.current = null;
       }
       return;
@@ -79,18 +79,18 @@ const LiveWaveform: React.FC<LiveWaveformProps> = ({
       const time = performance.now();
       const dt = time - lastTime;
       const elapsedSeconds = (time - startTime) / 1000;
-      
+
       if (dt >= 1000 / POINTS_PER_SECOND) {
         if (analyserRef.current && dataArrayRef.current) {
           analyserRef.current.getByteTimeDomainData(dataArrayRef.current as any);
-          
+
           // Get max amplitude in this small window
           let max = 0;
           for (let i = 0; i < bufferLength; i++) {
             const v = Math.abs(dataArrayRef.current[i] - 128);
             if (v > max) max = v;
           }
-          
+
           historyRef.current.push({ t: elapsedSeconds, a: max });
           // Limit history size to prevent memory leak
           if (historyRef.current.length > POINTS_PER_SECOND * 3600) { // Keep 1 hour
@@ -109,7 +109,7 @@ const LiveWaveform: React.FC<LiveWaveformProps> = ({
     return () => {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
       if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
-        audioContextRef.current.close().catch(() => {});
+        audioContextRef.current.close().catch(() => { });
       }
     };
   }, [isRecording, stream]);
@@ -177,15 +177,15 @@ const LiveWaveform: React.FC<LiveWaveformProps> = ({
       ctx.beginPath();
 
       const midY = height / 2;
-      
+
       const totalPointsRecorded = history.length;
-      
+
       for (let i = 0; i < totalPointsRecorded; i++) {
         const pt = history[i] as any; // Handle both {t, a} or raw number just in case
-        
+
         let timeOfPoint: number;
         let amplitude: number;
-        
+
         if (typeof pt === 'object' && pt !== null && 'a' in pt) {
           timeOfPoint = pt.t;
           amplitude = pt.a;
@@ -193,7 +193,7 @@ const LiveWaveform: React.FC<LiveWaveformProps> = ({
           timeOfPoint = recordingTime - ((totalPointsRecorded - 1 - i) / POINTS_PER_SECOND);
           amplitude = pt;
         }
-        
+
         if (timeOfPoint < minTime || timeOfPoint > maxTime) continue;
 
         const x = (timeOfPoint - minTime) * pixelsPerSecond;
@@ -210,12 +210,12 @@ const LiveWaveform: React.FC<LiveWaveformProps> = ({
     ctx.fillStyle = theme.palette.text.secondary;
     ctx.font = '10px monospace';
     ctx.textAlign = 'center';
-    
+
     const startTick = Math.ceil(minTime / 5) * 5;
     for (let t = startTick; t <= maxTime; t += 5) {
       const x = (t - minTime) * pixelsPerSecond;
       ctx.fillText(`${t}s`, x, height - 5);
-      
+
       ctx.beginPath();
       ctx.moveTo(x, height - 20);
       ctx.lineTo(x, height);
@@ -227,10 +227,10 @@ const LiveWaveform: React.FC<LiveWaveformProps> = ({
   const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    
+
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
-    
+
     const maxTime = recordingTime;
     const minTime = Math.max(0, maxTime - VISIBLE_SECONDS);
     const clickedTime = minTime + (x / rect.width) * VISIBLE_SECONDS;
@@ -242,7 +242,7 @@ const LiveWaveform: React.FC<LiveWaveformProps> = ({
         return;
       }
     }
-    
+
     onDetectionSelect(null);
   };
 
@@ -254,14 +254,14 @@ const LiveWaveform: React.FC<LiveWaveformProps> = ({
       const parent = canvas.parentElement;
       if (parent) {
         canvas.width = parent.clientWidth;
-        canvas.height = 160; 
+        canvas.height = 160;
         if (!isRecording) renderCanvas();
       }
     };
-    
+
     window.addEventListener('resize', resize);
     resize();
-    
+
     return () => window.removeEventListener('resize', resize);
   }, [isRecording]);
 
@@ -274,9 +274,9 @@ const LiveWaveform: React.FC<LiveWaveformProps> = ({
 
   return (
     <Box sx={{ width: '100%', height: 160, position: 'relative', bgcolor: 'background.paper', borderRadius: 2, overflow: 'hidden', border: `1px solid ${theme.palette.divider}` }}>
-      <canvas 
-        ref={canvasRef} 
-        style={{ display: 'block', width: '100%', height: '100%', cursor: 'pointer' }} 
+      <canvas
+        ref={canvasRef}
+        style={{ display: 'block', width: '100%', height: '100%', cursor: 'pointer' }}
         onClick={handleCanvasClick}
       />
     </Box>

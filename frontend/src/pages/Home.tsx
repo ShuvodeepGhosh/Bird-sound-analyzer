@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Typography, Button, Box, Tooltip } from '@mui/material';
+import { Container, Typography, Button, Box, } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const Home: React.FC = () => {
@@ -13,26 +13,26 @@ const Home: React.FC = () => {
       <Typography variant="h6" color="text.secondary" sx={{ mb: 4, fontWeight: 400, maxWidth: 600, mx: 'auto' }}>
         Professional bird sound analysis and identification.
       </Typography>
-      <Box sx={{ 
-        display: 'flex', 
-        flexDirection: { xs: 'column', sm: 'row' }, 
-        gap: 3, 
+      <Box sx={{
+        display: 'flex',
+        flexDirection: { xs: 'column', sm: 'row' },
+        gap: 3,
         justifyContent: 'center',
-        mt: 4 
+        mt: 4
       }}>
-        <Button 
-          variant="contained" 
-          color="secondary" 
-          size="large" 
+        <Button
+          variant="contained"
+          color="secondary"
+          size="large"
           onClick={() => navigate('/record')}
           sx={{ px: 4, py: 1.5, fontSize: '1.1rem', width: { xs: '100%', sm: 'auto' } }}
         >
           Record Live
         </Button>
-        <Button 
-          variant="contained" 
-          color="primary" 
-          size="large" 
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
           onClick={() => navigate('/upload')}
           sx={{ px: 4, py: 1.5, fontSize: '1.1rem', width: { xs: '100%', sm: 'auto' } }}
         >
